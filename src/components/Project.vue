@@ -2,16 +2,18 @@
   <div class="system-user-container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="system-user-search">
-        <el-form :inline="true" class="flex justify-between" :model="searchForm" label-position="right">
+        <el-form :inline="true" class="flex" :model="searchForm" label-position="right">
           <el-form-item label="项目名称">
             <el-input size="default" placeholder="请输入项目名称" clearable v-model="searchForm.project_name"></el-input>
           </el-form-item>
 
           <el-form-item>
             <el-button type="primary" :icon="Search" @click="onSearch()">查询</el-button>
-            <el-button type="success" :icon="Plus" @click="onOpenProjectCreate()">新增项目</el-button>
           </el-form-item>
         </el-form>
+      </div>
+      <div class="flex justify-end">
+        <el-button type="primary" :icon="Plus" @click="onOpenProjectCreate()">新增项目</el-button>
       </div>
       <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
         <el-table-column prop="id" label="id" width="60" />
