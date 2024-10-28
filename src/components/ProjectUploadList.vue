@@ -1,30 +1,25 @@
 <template>
   <div class="system-user-container layout-padding">
-    <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="960px">
+    <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="1080px">
       <div class="system-user-search">
-        <el-form size="default" label-width="90px">
-          <el-row :gutter="35">
-            <el-form-item label="文件名称">
-              <el-input size="default" placeholder="请输入文件名称" clearable style="max-width: 180px" v-model="state.tableData.param.filename"></el-input>
-            </el-form-item>
-            <el-form-item label="文件后缀">
-              <el-input size="default" placeholder="请输入文件后缀" clearable style="max-width: 180px" v-model="state.tableData.param.file_suffix"></el-input>
-            </el-form-item>
-            <el-form-item label="文件大小">
-              <el-input size="default" placeholder="e.g. 10k 2m 0.3gb" clearable style="max-width: 180px" v-model="state.tableData.param.file_size_range.min"></el-input>
-              &nbsp;&nbsp;-&nbsp;&nbsp;
-              <el-input size="default" placeholder="e.g. 10k 2m 0.3gb" clearable style="max-width: 180px" v-model="state.tableData.param.file_size_range.max"></el-input>
-            </el-form-item>
-            <el-form-item label="上传时间">
-              <el-date-picker v-model="datetimerange" type="datetimerange" start-placeholder="开始时间" end-placeholder="结束时间" format="YYYY-MM-DD HH:mm:ss" />
-            </el-form-item>
-            <el-button size="default" type="primary" class="ml10" @click="onSearch()">
-              <el-icon>
-                <ele-Search />
-              </el-icon>
-              查询
-            </el-button>
-          </el-row>
+        <el-form :inline="true" size="default" label-width="90px">
+          <el-form-item label="文件名称">
+            <el-input size="default" placeholder="请输入文件名称" clearable v-model="state.tableData.param.filename"></el-input>
+          </el-form-item>
+          <el-form-item label="文件后缀">
+            <el-input size="default" placeholder="请输入文件后缀" clearable v-model="state.tableData.param.file_suffix"></el-input>
+          </el-form-item>
+          <el-form-item label="文件大小">
+            <el-input size="default" placeholder="e.g. 10k 2m 0.3gb" clearable v-model="state.tableData.param.file_size_range.min" style="width: 100px"></el-input>
+            <span style="padding: 0 5px">-</span>
+            <el-input size="default" style="width: 100px" placeholder="e.g. 10k 2m 0.3gb" clearable v-model="state.tableData.param.file_size_range.max"></el-input>
+          </el-form-item>
+          <el-form-item label="上传时间">
+            <el-date-picker v-model="datetimerange" type="datetimerange" start-placeholder="开始时间" end-placeholder="结束时间" format="YYYY-MM-DD HH:mm:ss" />
+          </el-form-item>
+          <el-form-item label=" ">
+            <el-button :icon="Search" type="primary" class="ml10" @click="onSearch()">查询</el-button>
+          </el-form-item>
         </el-form>
       </div>
       <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
@@ -58,6 +53,7 @@
 import { reactive, ref, watch } from 'vue';
 import { useProjectApi } from '~/api/index';
 import { ElMessageBox, ElMessage } from 'element-plus';
+import { Search } from '@element-plus/icons-vue';
 
 const datetimerange = ref('');
 const state = reactive<FileUploadListState>({

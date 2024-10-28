@@ -1,27 +1,13 @@
 <template>
   <div class="system-user-container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
-      <div class="system-user-search mb15">
-        <el-form :inline="true" :model="searchForm" label-position="right">
+      <div class="system-user-search">
+        <el-form :inline="true" class="flex justify-between" :model="searchForm" label-position="right">
           <el-form-item label="项目名称">
             <el-input size="default" placeholder="请输入项目名称" clearable v-model="searchForm.project_name"></el-input>
           </el-form-item>
-          <el-form-item label="文件名称">
-            <el-input size="default" placeholder="请输入文件名称" clearable v-model="searchForm.file_name"></el-input>
-          </el-form-item>
-          <el-form-item label="文件大小">
-            <el-input size="default" placeholder="0M" clearable style="width: 90px" v-model="searchForm.min_size"></el-input>
-            <span style="padding: 0 10px">-</span>
-            <el-input size="default" placeholder="50M" clearable style="width: 90px" v-model="searchForm.max_size"></el-input>
-          </el-form-item>
 
-          <el-form-item label="时间">
-            <el-date-picker style="width: 180px" v-model="searchForm.date" type="daterange" range-separator="至" start-placeholder="开启时间" end-placeholder="结束时间" />
-          </el-form-item>
-          <el-form-item label="文件后缀名">
-            <el-input size="default" placeholder="请输入文件后缀名" clearable v-model="searchForm.ext_name"></el-input>
-          </el-form-item>
-          <el-form-item label=" ">
+          <el-form-item>
             <el-button type="primary" :icon="Search" @click="onSearch()">查询</el-button>
             <el-button type="success" :icon="Plus" @click="onOpenProjectCreate()">新增项目</el-button>
           </el-form-item>
@@ -73,11 +59,6 @@ const projectUploadDialogRef = ref();
 // 搜索框
 const searchForm = reactive({
   project_name: '',
-  file_name: '',
-  date: [],
-  min_size: '',
-  max_size: '',
-  ext_name: '',
 });
 
 const state = reactive<ProjectState>({
@@ -167,6 +148,11 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.system-user-search {
+  border: 1px solid #ccc;
+  padding-top: 20px;
+  margin-bottom: 30px;
+}
 :deep(.ep-form-item__label) {
   width: 100px;
 }
