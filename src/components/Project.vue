@@ -51,7 +51,7 @@
         :page-sizes="[10, 20, 30]"
         v-model:current-page="state.tableData.param.pageNum"
         background
-        v-model:page-size="state.tableData.param.pageSize"
+        v-model:page-size="state.tableData.param.page_size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="state.tableData.total"></el-pagination>
     </el-card>
@@ -65,7 +65,6 @@
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { useProjectApi } from '~/api/index';
 import { Search, Plus } from '@element-plus/icons-vue';
-// import { ElMessageBox, ElMessage } from 'element-plus';
 
 const projectUploadListDialogRef = ref();
 const projectCreateDialogRef = ref();
@@ -111,7 +110,7 @@ const getTableData = async () => {
 
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-  state.tableData.param.pageSize = val;
+  state.tableData.param.page_size = val;
   getTableData();
 };
 // 分页改变
