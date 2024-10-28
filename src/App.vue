@@ -3,7 +3,7 @@
     <!-- <BaseHeader /> -->
     <div class="flex main-container">
       <!-- <BaseSide /> -->
-      <div w="full" py="4">
+      <div w="full">
         <Project />
         <!-- <Logos my="4" /> -->
         <!-- <HelloWorld msg="Hello Vue 3 + Element Plus + Vite" /> -->
@@ -14,7 +14,6 @@
 
 <style>
 #app {
-  text-align: center;
   color: var(--ep-text-color-primary);
 }
 

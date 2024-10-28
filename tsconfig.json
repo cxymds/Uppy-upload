@@ -14,7 +14,8 @@
     "paths": {
       "~/*": ["src/*"]
     },
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["element-plus/global"]
   },
   "vueCompilerOptions": {
     "target": 3
