@@ -1,0 +1,40 @@
+{
+  "name": "element-plus-vite-starter",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "generate": "vite-ssg build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@uppy/core": "^4.2.2",
+    "@uppy/dashboard": "^4.1.1",
+    "@uppy/drag-drop": "^4.0.3",
+    "@uppy/file-input": "^4.0.2",
+    "@uppy/progress-bar": "^4.0.0",
+    "@uppy/status-bar": "^4.0.3",
+    "@uppy/tus": "^4.1.2",
+    "@uppy/vue": "^2.0.1",
+    "axios": "^1.7.7",
+    "element-plus": "^2.8.6",
+    "install": "^0.13.0",
+    "qs": "^6.13.0",
+    "sass": "^1.80.4",
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@iconify-json/ep": "^1.2.1",
+    "@types/node": "^20.17.1",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.6.3",
+    "unocss": "^0.58.9",
+    "unplugin-vue-components": "^0.26.0",
+    "vite": "^5.4.10",
+    "vite-ssg": "^0.23.8",
+    "vue-tsc": "^2.1.8"
+  },
+  "license": "MIT"
+}
