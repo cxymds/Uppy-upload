@@ -131,7 +131,7 @@ const onRowDel = (row: ProjectType) => {
   })
     .then(() => {
       projectApi
-        .projectUploadDelete({ project_id: row.id })
+        .projectDelete({ project_id: row.id })
         .then(() => {
           getTableData();
           ElMessage.success('删除成功');
