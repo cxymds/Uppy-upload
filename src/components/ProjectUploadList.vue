@@ -1,26 +1,35 @@
 <template>
   <div class="system-user-container layout-padding">
     <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="1080px">
-      <div class="system-user-search">
+      <div class="system-user-search border-solid border-#ccc pt-4 my-6">
         <el-form :inline="true" size="default" label-width="90px">
-          <el-form-item label="文件名称">
-            <el-input size="default" placeholder="请输入文件名称" clearable v-model="state.tableData.param.filename"></el-input>
-          </el-form-item>
-          <el-form-item label="文件后缀">
-            <el-input size="default" placeholder="请输入文件后缀" clearable v-model="state.tableData.param.file_suffix"></el-input>
-          </el-form-item>
-          <el-form-item label="文件大小">
-            <el-input size="default" placeholder="e.g. 10k 2m 0.3gb" clearable v-model="state.tableData.param.file_size_range.min" style="width: 100px"></el-input>
-            <span style="padding: 0 5px">-</span>
-            <el-input size="default" style="width: 100px" placeholder="e.g. 10k 2m 0.3gb" clearable v-model="state.tableData.param.file_size_range.max"></el-input>
-          </el-form-item>
-          <el-form-item label="上传时间">
-            <el-date-picker v-model="datetimerange" type="datetimerange" start-placeholder="开始时间" end-placeholder="结束时间" format="YYYY-MM-DD HH:mm:ss" />
-          </el-form-item>
-          <el-form-item label=" ">
-            <el-button :icon="Search" type="primary" class="ml10" @click="onSearch()">查询</el-button>
-          </el-form-item>
+          <el-row>
+            <el-col :span="18">
+              <el-form-item label="文件名称">
+                <el-input size="default" placeholder="请输入文件名称" clearable v-model="state.tableData.param.filename"></el-input>
+              </el-form-item>
+              <el-form-item label="文件后缀">
+                <el-input size="default" placeholder="请输入文件后缀" clearable v-model="state.tableData.param.file_suffix"></el-input>
+              </el-form-item>
+              <el-form-item label="文件大小">
+                <el-input size="default" placeholder="e.g. 10k 2m 0.3gb" clearable v-model="state.tableData.param.file_size_range.min" style="width: 100px"></el-input>
+                <span style="padding: 0 5px">-</span>
+                <el-input size="default" style="width: 100px" placeholder="e.g. 10k 2m 0.3gb" clearable v-model="state.tableData.param.file_size_range.max"></el-input>
+              </el-form-item>
+              <el-form-item label="上传时间">
+                <el-date-picker style="width: 400px" v-model="datetimerange" type="daterange" start-placeholder="开始时间" end-placeholder="结束时间" format="YYYY-MM-DD" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" flex>
+              <el-form-item label=" ">
+                <el-button :icon="Search" type="primary" class="ml10" @click="onSearch()">查询</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
+      </div>
+      <div class="flex justify-end mb-4 pe-6">
+        <el-button type="primary" :icon="Upload" @click="upload">上传</el-button>
       </div>
       <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
         <el-table-column prop="file_id" label="序号" show-overflow-tooltip></el-table-column>
@@ -46,6 +55,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="state.tableData.total"></el-pagination>
     </el-dialog>
+    <ProjectUpload ref="projectUploadDialogRef" @refresh="getTableData()" />
   </div>
 </template>
 
@@ -53,10 +63,12 @@
 import { reactive, ref, watch } from 'vue';
 import { useProjectApi } from '~/api/index';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { Search } from '@element-plus/icons-vue';
+import { Search, Upload } from '@element-plus/icons-vue';
 
 const datetimerange = ref('');
+const projectUploadDialogRef = ref();
 const state = reactive<FileUploadListState>({
+  project: null,
   tableData: {
     data: [],
     total: 0,
@@ -151,6 +163,7 @@ const onRowDel = (row: ProjectUploadType) => {
 
 // 打开弹窗
 const openDialog = (row: ProjectType) => {
+  state.project = row;
   state.tableData.param.project_id = row.id;
   state.dialog.isShowDialog = true;
   getTableData();
@@ -158,6 +171,11 @@ const openDialog = (row: ProjectType) => {
 // 关闭弹窗
 const closeDialog = () => {
   state.dialog.isShowDialog = false;
+};
+
+// 打开上传弹窗
+const upload = () => {
+  projectUploadDialogRef.value.openDialog(state.project);
 };
 
 // 搜索功能
