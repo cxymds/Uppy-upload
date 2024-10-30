@@ -4,9 +4,7 @@
     <div class="flex main-container">
       <!-- <BaseSide /> -->
       <div w="full">
-        <Project />
-        <!-- <Logos my="4" /> -->
-        <!-- <HelloWorld msg="Hello Vue 3 + Element Plus + Vite" /> -->
+        <router-view></router-view>
       </div>
     </div>
   </el-config-provider>
