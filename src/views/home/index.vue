@@ -115,11 +115,6 @@ const onOpenProjectCreate = () => {
   projectCreateDialogRef.value.openDialog();
 };
 
-// 打开上传文件的弹窗
-const onOpenProjectUpload = (row: ProjectType) => {
-  projectUploadDialogRef.value.openDialog(row);
-};
-
 // 删除记录
 const onRowDel = (row: ProjectType) => {
   ElMessageBox.confirm(`此操作将永久删除文件：“${row.project_name}”，是否继续?`, '提示', {

@@ -9,12 +9,12 @@
           <el-input v-model="state.formData.project_description" type="textarea" placeholder="请输入项目描述" maxlength="150"></el-input>
         </el-form-item>
         <el-form-item label="目标服务器">
-          <el-select v-model="state.formData.target_server" placeholder="请选择" clearable>
-            <el-option v-for="item in state.target_servers" :label="item.name" :value="item.target_server + '/' + item.target_type"></el-option>
+          <el-select v-model="state.formData.target_server" placeholder="请选择" clearable @change="handleTargetServerChange">
+            <el-option v-for="item in state.target_servers" :label="item.name" :value="item.target_server"></el-option>
           </el-select>
         </el-form-item>
         <!-- 根据 target_server 拼接 target_type 显示不同的表单 -->
-        <el-form-item label="保存路径" v-if="state.formData.target_server.includes('local')">
+        <el-form-item label="保存路径" v-if="state.islocal">
           <el-input v-model="state.formData.path" placeholder="请输入保存文件路径" clearable></el-input>
         </el-form-item>
       </el-form>
@@ -31,7 +31,6 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue';
 import { useProjectApi } from '~/api/index';
-import { ElMessageBox, ElMessage } from 'element-plus';
 
 // 定义变量内容
 const projectDialogFormRef = ref();
@@ -40,9 +39,9 @@ const state = reactive({
     project_name: '',
     project_description: '',
     target_server: '',
-    path: '/',
   },
   target_servers: [],
+  islocal: false,
   dialog: {
     isShowDialog: false,
     type: '',
@@ -58,6 +57,18 @@ const projectApi = useProjectApi();
 const getTargetServers = async () => {
   const res = await projectApi.listProjectServers();
   state.target_servers = res.data;
+};
+
+// 下拉选择服务器
+const handleTargetServerChange = (value: string) => {
+  const server = state.target_servers.find((item) => item.target_server === value);
+  console.log('🚀 ~ handleTargetServerChange ~ server:', server);
+  if (server.target_type == 'local') {
+    state.islocal = true;
+  } else {
+    state.islocal = false;
+    delete state.formData.path;
+  }
 };
 
 // 打开弹窗

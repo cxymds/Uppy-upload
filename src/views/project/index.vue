@@ -31,12 +31,13 @@
         </el-form>
       </div>
       <div class="flex justify-end mb-4 pe-4">
+        <!-- <el-button type="primary" :icon="Upload" class="fileUpload" id="fileUpload">上传</el-button> -->
         <el-dropdown>
           <el-button type="primary" :icon="Upload">上传</el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="openUpload">上传文件</el-dropdown-item>
-              <el-dropdown-item @click="openUpload">上传文件夹</el-dropdown-item>
+              <el-dropdown-item class="fileUpload">上传文件</el-dropdown-item>
+              <el-dropdown-item class="fileUpload">上传文件夹</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -44,9 +45,9 @@
       <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
         <el-table-column prop="file_id" label="序号" width="90px" show-overflow-tooltip></el-table-column>
         <el-table-column prop="filename" label="文件名称" show-overflow-tooltip>
-          <template #default="scope">
+          <!-- <template #default="scope">
             <el-badge value="密" class="icon-item" type="warning">{{ scope.row.filename }}</el-badge>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop="upload_status_desc" label="上传状态" show-overflow-tooltip></el-table-column>
         <el-table-column prop="file_size_desc" label="文件大小" show-overflow-tooltip></el-table-column>
@@ -69,29 +70,41 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="state.tableData.total"></el-pagination>
     </el-card>
-    <UploadCom ref="projectUploadDialogRef" @refresh="getTableData()"></UploadCom>
+    <!-- <UploadCom ref="projectUploadDialogRef" @refresh="getTableData()"></UploadCom> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch, onMounted } from 'vue';
+import { reactive, ref, watch, onMounted, nextTick } from 'vue';
 import { useProjectApi } from '~/api/index';
-import { ElMessageBox, ElMessage } from 'element-plus';
 import { Search, Upload } from '@element-plus/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
-import UploadCom from './components/upload.vue';
+// import UploadCom from './components/upload.vue';
+
+import Uppy, { debugLogger } from '@uppy/core';
+import Dashboard from '@uppy/dashboard';
+import ZhCn from '@uppy/locales/lib/zh_CN';
+// 浏览器缓存 断点续传
+import GoldenRetriever from '@uppy/golden-retriever';
+import Tus from '@uppy/tus';
+
+import '@uppy/core/dist/style.css';
+import '@uppy/dashboard/dist/style.css';
+import '@uppy/drag-drop/dist/style.css';
+import '@uppy/progress-bar/dist/style.css';
+import '@uppy/status-bar/dist/style.css';
+import { ElMessage } from 'element-plus';
 
 const route = useRoute();
 const router = useRouter();
 const datetimerange = ref('');
-const projectUploadDialogRef = ref();
-const state = reactive<FileUploadListState>({
+const state = reactive({
   tableData: {
     data: [],
     total: 0,
     loading: false,
     param: {
-      target_server: null,
+      target_server: '',
       project_id: 0,
       page: 1,
       page_size: 10,
@@ -132,8 +145,6 @@ const projectApi = useProjectApi();
 // 初始化表格数据
 const getTableData = async () => {
   state.tableData.loading = true;
-  console.log(state.tableData.param);
-
   const res = await projectApi.projectUploadList(state.tableData.param);
 
   state.tableData.data = res.data.list;
@@ -176,10 +187,12 @@ const onRowDel = (row: ProjectUploadType) => {
 };
 
 // 打开上传弹窗
+const projectUploadDialogRef = ref();
 const openUpload = () => {
-  projectUploadDialogRef.value.openDialog(state.project);
+  projectUploadDialogRef.value.openDialog();
 };
 
+let uppy = null;
 // 搜索功能
 const onSearch = () => {
   getTableData();
@@ -193,10 +206,69 @@ onMounted(() => {
     router.push('/');
     return;
   }
-  state.tableData.param.target_server = route.query.server;
-  state.tableData.param.project_id = route.query.project_id - 0;
+  state.tableData.param.target_server = String(route.query.server);
+  state.tableData.param.project_id = Number(route.query.project_id);
 
   getTableData();
+
+  let uppy = new Uppy({
+    //   autoProceed: true,
+    debug: true,
+    locale: ZhCn,
+  })
+    .use(Dashboard, {
+      //   target: 'body',
+      trigger: '.fileUpload',
+      //   inline: true,
+      fileManagerSelectionType: 'folders',
+    })
+    .use(GoldenRetriever, { serviceWorker: true });
+
+  try {
+    // 创建URL对象
+    let urlObj = new URL(route.query.server);
+
+    // 使用URLSearchParams对象添加查询参数
+    urlObj.searchParams.append('project_id', String(route.query.project_id));
+
+    const tusPlugin = uppy.getPlugin('tusPlugin' + String(route.query.project_id));
+    console.log('🚀 ~ onMounted ~ tusPlugin:', tusPlugin);
+    if (tusPlugin !== undefined) {
+      //   uppy.removePlugin(tusPlugin);
+      uppy.use(Tus, tusPlugin);
+    } else {
+      uppy.use(Tus, {
+        endpoint: urlObj.toString(),
+        limit: 6,
+        id: 'tusPlugin' + String(route.query.project_id),
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    ElMessage.error('解析目标服务器地址失败');
+  }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((regs) => {
+      for (let reg of regs) {
+        reg.unregister();
+      }
+      navigator.serviceWorker
+        .register('/sw.js') // path to your bundled service worker with GoldenRetriever service worker
+        .then((registration) => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        })
+        .catch((error) => {
+          console.log(`Registration failed with ${error}`);
+        });
+    });
+  }
+  uppy.on('complete', (result) => {
+    ElMessage.success('上传成功');
+  });
+
+  uppy.on('error', (error) => {
+    ElMessage.error('上传失败:' + error);
+  });
 });
 </script>
 

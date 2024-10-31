@@ -1,0 +1,48 @@
+diff --git a/node_modules/@uppy/locales/lib/zh_CN.js b/node_modules/@uppy/locales/lib/zh_CN.js
+index 550cc4f..16f2fde 100644
+--- a/node_modules/@uppy/locales/lib/zh_CN.js
++++ b/node_modules/@uppy/locales/lib/zh_CN.js
+@@ -112,6 +112,18 @@ zh_CN.strings = {
+   xTimeLeft: '剩余 %{time}',
+   youCanOnlyUploadFileTypes: '您只能上传这些文件类型：%{types}',
+   youCanOnlyUploadX: '您只能上传 %{smart_count} 个文件',
+-  youHaveToAtLeastSelectX: '您至少要选择 %{smart_count} 个文件'
++  youHaveToAtLeastSelectX: '您至少要选择 %{smart_count} 个文件',
++  error: '错误',
++  editFileWithFilename: '编辑文件 %{file}',
++  save: '保存',
++  importFiles: '从以下位置导入文件:',
++  browseFolders: '浏览文件夹',
++  recoveredXFiles:'无法完全恢复 %{smart_count} 个文件。请重新选择并继续上传。',
++  recoveredAllFiles: '已经恢复了所有文件。您现在可以继续上传。',
++  sessionRestored: '上传已恢复',
++  reSelect: '重新选择',
++  missingRequiredMetaFields: '缺少必需的元字段：%{fields}',
++  takePictureBtn: '拍照',
++  recordVideoBtn: '录视频',
+ };
+ export default zh_CN;
+\ No newline at end of file
+diff --git a/node_modules/@uppy/locales/src/zh_CN.ts b/node_modules/@uppy/locales/src/zh_CN.ts
+index b13cfb8..5500464 100644
+--- a/node_modules/@uppy/locales/src/zh_CN.ts
++++ b/node_modules/@uppy/locales/src/zh_CN.ts
+@@ -117,6 +117,18 @@ zh_CN.strings = {
+   youCanOnlyUploadFileTypes: '您只能上传这些文件类型：%{types}',
+   youCanOnlyUploadX: '您只能上传 %{smart_count} 个文件',
+   youHaveToAtLeastSelectX: '您至少要选择 %{smart_count} 个文件',
++  error: '错误',
++  editFileWithFilename: '编辑文件 %{file}',
++  save: '保存',
++  importFiles: '从以下位置导入文件:',
++  browseFolders: '浏览文件夹',
++  recoveredXFiles:'无法完全恢复 %{smart_count} 个文件。请重新选择并继续上传。',
++  recoveredAllFiles: '已经恢复了所有文件。您现在可以继续上传。',
++  sessionRestored: '上传已恢复',
++  reSelect: '重新选择',
++  missingRequiredMetaFields: '缺少必需的元字段：%{fields}',
++  takePictureBtn: '拍照',
++  recordVideoBtn: '录视频',
+ }
+ 
+ export default zh_CN
