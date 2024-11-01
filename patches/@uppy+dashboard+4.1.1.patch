@@ -1,0 +1,21 @@
+diff --git a/node_modules/@uppy/dashboard/lib/components/AddFiles.js b/node_modules/@uppy/dashboard/lib/components/AddFiles.js
+index 0272668..518a34a 100644
+--- a/node_modules/@uppy/dashboard/lib/components/AddFiles.js
++++ b/node_modules/@uppy/dashboard/lib/components/AddFiles.js
+@@ -79,7 +79,7 @@ class AddFiles extends Component {
+         role: "tab",
+         tabIndex: 0,
+         "data-uppy-super-focusable": true,
+-        onClick: this.triggerFileInputClick
++        onClick: this.props.fileManagerSelectionType ==='files'? this.triggerFileInputClick : this.triggerFolderInputClick
+       }, h("div", {
+         className: "uppy-DashboardTab-inner"
+       }, h("svg", {
+@@ -169,6 +169,7 @@ class AddFiles extends Component {
+       // to Camel
+       const lowerFMSelectionType = this.props.fileManagerSelectionType;
+       const camelFMSelectionType = lowerFMSelectionType.charAt(0).toUpperCase() + lowerFMSelectionType.slice(1);
++      console.log("🚀 ~ AddFiles ~ constructor ~ camelFMSelectionType:", camelFMSelectionType)
+       return h("div", {
+         class: "uppy-Dashboard-AddFiles-title"
+       },

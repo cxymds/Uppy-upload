@@ -37,7 +37,7 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item class="fileUpload">上传文件</el-dropdown-item>
-              <el-dropdown-item class="fileUpload">上传文件夹</el-dropdown-item>
+              <el-dropdown-item class="folderUpload">上传文件夹</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -93,7 +93,6 @@ import '@uppy/dashboard/dist/style.css';
 import '@uppy/drag-drop/dist/style.css';
 import '@uppy/progress-bar/dist/style.css';
 import '@uppy/status-bar/dist/style.css';
-import { ElMessage } from 'element-plus';
 
 const route = useRoute();
 const router = useRouter();
@@ -186,21 +185,14 @@ const onRowDel = (row: ProjectUploadType) => {
     .catch(() => {});
 };
 
-// 打开上传弹窗
-const projectUploadDialogRef = ref();
-const openUpload = () => {
-  projectUploadDialogRef.value.openDialog();
-};
-
-let uppy = null;
 // 搜索功能
 const onSearch = () => {
   getTableData();
 };
 
+const makeUpView = () => {};
 // 页面加载时
 onMounted(() => {
-  console.log(route.query);
   if (!route.query.project_id || !route.query.server) {
     ElMessage.error('项目参数有误，请重新选择项目');
     router.push('/');
@@ -208,10 +200,9 @@ onMounted(() => {
   }
   state.tableData.param.target_server = String(route.query.server);
   state.tableData.param.project_id = Number(route.query.project_id);
-
   getTableData();
 
-  let uppy = new Uppy({
+  let files_uppy = new Uppy({
     //   autoProceed: true,
     debug: true,
     locale: ZhCn,
@@ -220,6 +211,21 @@ onMounted(() => {
       //   target: 'body',
       trigger: '.fileUpload',
       //   inline: true,
+      //  'files', 'folders', or 'both'
+      fileManagerSelectionType: 'folders',
+    })
+    .use(GoldenRetriever, { serviceWorker: true });
+
+  let folder_uppy = new Uppy({
+    //   autoProceed: true,
+    debug: true,
+    // locale: ZhCn,
+  })
+    .use(Dashboard, {
+      //   target: 'body',
+      trigger: '.folderUpload',
+      //   inline: true,
+      //  'files', 'folders', or 'both'
       fileManagerSelectionType: 'folders',
     })
     .use(GoldenRetriever, { serviceWorker: true });
@@ -227,24 +233,22 @@ onMounted(() => {
   try {
     // 创建URL对象
     let urlObj = new URL(route.query.server);
-
     // 使用URLSearchParams对象添加查询参数
     urlObj.searchParams.append('project_id', String(route.query.project_id));
 
-    const tusPlugin = uppy.getPlugin('tusPlugin' + String(route.query.project_id));
-    console.log('🚀 ~ onMounted ~ tusPlugin:', tusPlugin);
-    if (tusPlugin !== undefined) {
-      //   uppy.removePlugin(tusPlugin);
-      uppy.use(Tus, tusPlugin);
-    } else {
-      uppy.use(Tus, {
-        endpoint: urlObj.toString(),
-        limit: 6,
-        id: 'tusPlugin' + String(route.query.project_id),
-      });
-    }
+    // const tusPlugin = uppy.getPlugin('tusPlugin' + String(route.query.project_id));
+
+    files_uppy.use(Tus, {
+      endpoint: urlObj.toString(),
+      limit: 6,
+      id: 'tusPlugin' + String(route.query.project_id),
+    });
+    folder_uppy.use(Tus, {
+      endpoint: urlObj.toString(),
+      limit: 6,
+      id: 'tusPlugin' + String(route.query.project_id),
+    });
   } catch (e) {
-    console.log(e);
     ElMessage.error('解析目标服务器地址失败');
   }
   if ('serviceWorker' in navigator) {
@@ -262,13 +266,6 @@ onMounted(() => {
         });
     });
   }
-  uppy.on('complete', (result) => {
-    ElMessage.success('上传成功');
-  });
-
-  uppy.on('error', (error) => {
-    ElMessage.error('上传失败:' + error);
-  });
 });
 </script>
 
