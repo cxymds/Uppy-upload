@@ -213,7 +213,7 @@ onMounted(() => {
       trigger: '.fileUpload',
       //   inline: true,
       //  'files', 'folders', or 'both'
-      fileManagerSelectionType: 'both',
+      fileManagerSelectionType: 'files',
       metaFields: [
         {
           id: 'isSecret',
@@ -225,7 +225,7 @@ onMounted(() => {
               required,
               form,
               onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
-              defaultChecked: value === 'off',
+              defaultChecked: value === 'on',
             });
           },
         },
