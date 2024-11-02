@@ -1,6 +1,10 @@
 <template>
   <div class="system-user-container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
+      <el-breadcrumb class="mb-4" :separator-icon="ArrowRight">
+        <el-breadcrumb-item :to="{ path: '/' }">项目</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ project_name }}</el-breadcrumb-item>
+      </el-breadcrumb>
       <div class="system-user-search border-solid border-#ccc my-4">
         <el-form :inline="true" size="default" label-width="90px">
           <el-row class="mt-4">
@@ -78,7 +82,7 @@
 <script setup lang="ts">
 import { reactive, ref, watch, onMounted, nextTick } from 'vue';
 import { useProjectApi } from '~/api/index';
-import { Search, Upload } from '@element-plus/icons-vue';
+import { Search, Upload, ArrowRight } from '@element-plus/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 // import UploadCom from './components/upload.vue';
 
@@ -98,6 +102,7 @@ import '@uppy/status-bar/dist/style.css';
 const route = useRoute();
 const router = useRouter();
 const datetimerange = ref('');
+const project_name = ref('');
 const state = reactive({
   tableData: {
     data: [],
@@ -199,6 +204,7 @@ onMounted(() => {
     router.push('/');
     return;
   }
+  project_name.value = String(route.query.project_name);
   state.tableData.param.target_server = String(route.query.server);
   state.tableData.param.project_id = Number(route.query.project_id);
   getTableData();

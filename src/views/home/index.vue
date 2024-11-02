@@ -1,6 +1,9 @@
 <template>
   <div class="system-user-container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
+      <el-breadcrumb class="mb-4">
+        <el-breadcrumb-item :to="{ path: '/' }">项目</el-breadcrumb-item>
+      </el-breadcrumb>
       <div class="system-user-search">
         <el-form :inline="true" class="flex" :model="searchForm" label-position="right">
           <el-form-item label="项目名称">
@@ -112,7 +115,7 @@ const onSearch = () => {
 
 // 打开查看上传的文件列表弹窗
 const onOpenDetailUpload = (row: ProjectType) => {
-  router.push({ name: 'project', query: { project_id: row.id, server: row.target_server } });
+  router.push({ name: 'project', query: { project_id: row.id, server: row.target_server, project_name: row.project_name } });
 };
 
 // 打开创建项目的弹窗

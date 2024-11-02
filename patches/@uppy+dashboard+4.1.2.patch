@@ -1,0 +1,61 @@
+diff --git a/node_modules/@uppy/dashboard/lib/components/AddFiles.js b/node_modules/@uppy/dashboard/lib/components/AddFiles.js
+index 0272668..518a34a 100644
+--- a/node_modules/@uppy/dashboard/lib/components/AddFiles.js
++++ b/node_modules/@uppy/dashboard/lib/components/AddFiles.js
+@@ -79,7 +79,7 @@ class AddFiles extends Component {
+         role: "tab",
+         tabIndex: 0,
+         "data-uppy-super-focusable": true,
+-        onClick: this.triggerFileInputClick
++        onClick: this.props.fileManagerSelectionType ==='files'? this.triggerFileInputClick : this.triggerFolderInputClick
+       }, h("div", {
+         className: "uppy-DashboardTab-inner"
+       }, h("svg", {
+@@ -169,6 +169,7 @@ class AddFiles extends Component {
+       // to Camel
+       const lowerFMSelectionType = this.props.fileManagerSelectionType;
+       const camelFMSelectionType = lowerFMSelectionType.charAt(0).toUpperCase() + lowerFMSelectionType.slice(1);
++      console.log("🚀 ~ AddFiles ~ constructor ~ camelFMSelectionType:", camelFMSelectionType)
+       return h("div", {
+         class: "uppy-Dashboard-AddFiles-title"
+       },
+diff --git a/node_modules/@uppy/dashboard/lib/locale.js b/node_modules/@uppy/dashboard/lib/locale.js
+index 6d452ee..c32aaec 100644
+--- a/node_modules/@uppy/dashboard/lib/locale.js
++++ b/node_modules/@uppy/dashboard/lib/locale.js
+@@ -61,20 +61,29 @@ export default {
+       1: 'Processing %{smart_count} files'
+     },
+     // The "powered by Uppy" link at the bottom of the Dashboard.
+-    poweredBy: 'Powered by %{uppy}',
++    // poweredBy: 'Powered by %{uppy}',
++    poweredBy: '强力驱动于 %{uppy}',
+     addMore: 'Add more',
+     editFileWithFilename: 'Edit file %{file}',
+     save: 'Save',
+     cancel: 'Cancel',
+-    dropPasteFiles: 'Drop files here or %{browseFiles}',
+-    dropPasteFolders: 'Drop files here or %{browseFolders}',
+-    dropPasteBoth: 'Drop files here, %{browseFiles} or %{browseFolders}',
++    // dropPasteFiles: 'Drop files here or %{browseFiles}',
++    // dropPasteFolders: 'Drop files here or %{browseFolders}',
++    // dropPasteBoth: 'Drop files here, %{browseFiles} or %{browseFolders}',
++
++    dropPasteBoth: '拖拽文件或文件夹到这里，或者%{browse}文件',
++    dropPasteFiles: '拖拽文件到这里，或者%{browse}文件',
++    dropPasteFolders: '拖拽文件夹到这里，或者%{browse}文件夹',
+     dropPasteImportFiles: 'Drop files here, %{browseFiles} or import from:',
+     dropPasteImportFolders: 'Drop files here, %{browseFolders} or import from:',
+     dropPasteImportBoth: 'Drop files here, %{browseFiles}, %{browseFolders} or import from:',
+     importFiles: 'Import files from:',
+-    browseFiles: 'browse files',
+-    browseFolders: 'browse folders',
++    // browseFiles: 'browse files',
++    // browseFolders: 'browse folders',
++    browse: '浏览',
++    browseFiles: '浏览',
++    browseFolders: '浏览文件夹',
++
+     recoveredXFiles: {
+       0: 'We could not fully recover 1 file. Please re-select it and resume the upload.',
+       1: 'We could not fully recover %{smart_count} files. Please re-select them and resume the upload.'
