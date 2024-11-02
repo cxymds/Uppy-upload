@@ -45,9 +45,10 @@
       <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
         <el-table-column prop="file_id" label="序号" width="90px" show-overflow-tooltip></el-table-column>
         <el-table-column prop="filename" label="文件名称" show-overflow-tooltip>
-          <!-- <template #default="scope">
-            <el-badge value="密" class="icon-item" type="warning">{{ scope.row.filename }}</el-badge>
-          </template> -->
+          <template #default="scope">
+            {{ scope.row.filename }}
+            <img width="20" v-if="scope.row.is_secret" src="../../assets/secret.jpg" alt="" />
+          </template>
         </el-table-column>
         <el-table-column prop="upload_status_desc" label="上传状态" show-overflow-tooltip></el-table-column>
         <el-table-column prop="file_size_desc" label="文件大小" show-overflow-tooltip></el-table-column>
@@ -212,7 +213,7 @@ onMounted(() => {
       trigger: '.fileUpload',
       //   inline: true,
       //  'files', 'folders', or 'both'
-      fileManagerSelectionType: 'folders',
+      fileManagerSelectionType: 'both',
       metaFields: [
         {
           id: 'isSecret',
@@ -223,8 +224,8 @@ onMounted(() => {
               style: { 'vertical-align': 'middle' },
               required,
               form,
-              onChange: (ev) => onChange(ev.target.checked ? 'on' : ''),
-              defaultChecked: value === 'on',
+              onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
+              defaultChecked: value === 'off',
             });
           },
         },
@@ -243,6 +244,22 @@ onMounted(() => {
       //   inline: true,
       //  'files', 'folders', or 'both'
       fileManagerSelectionType: 'folders',
+      metaFields: [
+        {
+          id: 'isSecret',
+          name: '是否加密',
+          render({ value, onChange, required, form }, h) {
+            return h('input', {
+              type: 'checkbox',
+              style: { 'vertical-align': 'middle' },
+              required,
+              form,
+              onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
+              defaultChecked: value === 'on',
+            });
+          },
+        },
+      ],
     })
     .use(GoldenRetriever, { serviceWorker: true });
 

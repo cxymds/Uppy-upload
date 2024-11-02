@@ -22,6 +22,11 @@
         <!-- <el-table-column prop="current_status_desc" label="上传状态" show-overflow-tooltip></el-table-column> -->
         <el-table-column prop="project_description" label="任务描述" show-overflow-tooltip></el-table-column>
         <el-table-column prop="target_server" label="目标服务器" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="project_path" label="路径" show-overflow-tooltip>
+          <template #default="scope">
+            {{ scope.row.target_type === 'local' ? scope.row.project_path : '--' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="created_at" label="上传时间" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="scope">
