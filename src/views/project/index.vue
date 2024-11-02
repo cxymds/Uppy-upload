@@ -51,7 +51,7 @@
         <el-table-column prop="filename" label="文件名称" show-overflow-tooltip>
           <template #default="scope">
             {{ scope.row.filename }}
-            <img width="20" v-if="scope.row.is_secret" src="../../assets/secret.jpg" alt="" />
+            <img width="20" v-if="scope.row.is_secret === 'on'" src="../../assets/secret.jpg" alt="" />
           </template>
         </el-table-column>
         <el-table-column prop="upload_status_desc" label="上传状态" show-overflow-tooltip></el-table-column>
@@ -141,9 +141,6 @@ watch(datetimerange, (newVal) => {
   state.tableData.param.upload_time_range.end_time = Math.floor(endTime.getTime() / 1000);
 });
 
-// 定义子组件向父组件传值/事件
-const emit = defineEmits(['refresh']);
-
 // 引入 api 请求接口
 const projectApi = useProjectApi();
 
@@ -231,7 +228,7 @@ onMounted(() => {
               required,
               form,
               onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
-              defaultChecked: value === 'on',
+              // defaultChecked: value === 'on',
             });
           },
         },
@@ -261,7 +258,7 @@ onMounted(() => {
               required,
               form,
               onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
-              defaultChecked: value === 'on',
+              // defaultChecked: value === 'on',
             });
           },
         },
@@ -269,6 +266,15 @@ onMounted(() => {
     })
     .use(GoldenRetriever, { serviceWorker: true });
 
+  files_uppy.on('dashboard:modal-closed', () => {
+    console.log('Modal is close');
+    getTableData();
+  });
+
+  folder_uppy.on('dashboard:modal-closed', () => {
+    console.log('Modal is close');
+    getTableData();
+  });
   try {
     // 创建URL对象
     let urlObj = new URL(route.query.server);
