@@ -213,6 +213,22 @@ onMounted(() => {
       //   inline: true,
       //  'files', 'folders', or 'both'
       fileManagerSelectionType: 'folders',
+      metaFields: [
+        {
+          id: 'isSecret',
+          name: '是否加密',
+          render({ value, onChange, required, form }, h) {
+            return h('input', {
+              type: 'checkbox',
+              style: { 'vertical-align': 'middle' },
+              required,
+              form,
+              onChange: (ev) => onChange(ev.target.checked ? 'on' : ''),
+              defaultChecked: value === 'on',
+            });
+          },
+        },
+      ],
     })
     .use(GoldenRetriever, { serviceWorker: true });
 
