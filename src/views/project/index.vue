@@ -239,7 +239,6 @@ onMounted(() => {
   let folder_uppy = new Uppy({
     //   autoProceed: true,
     debug: true,
-    // locale: ZhCn,
   })
     .use(Dashboard, {
       //   target: 'body',
@@ -263,6 +262,7 @@ onMounted(() => {
           },
         },
       ],
+      // locale: ZhCn,
     })
     .use(GoldenRetriever, { serviceWorker: true });
 

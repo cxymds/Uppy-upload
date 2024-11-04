@@ -24,10 +24,20 @@ index 550cc4f..16f2fde 100644
  export default zh_CN;
 \ No newline at end of file
 diff --git a/node_modules/@uppy/locales/src/zh_CN.ts b/node_modules/@uppy/locales/src/zh_CN.ts
-index b13cfb8..5500464 100644
+index b13cfb8..d8d77ea 100644
 --- a/node_modules/@uppy/locales/src/zh_CN.ts
 +++ b/node_modules/@uppy/locales/src/zh_CN.ts
-@@ -117,6 +117,18 @@ zh_CN.strings = {
+@@ -41,7 +41,8 @@ zh_CN.strings = {
+   dropHint: '拖拽文件到这里',
+   dropPasteBoth: '拖拽文件到这里，或者%{browse}文件',
+   dropPasteFiles: '拖拽文件到这里，或者%{browse}文件',
+-  dropPasteFolders: '拖拽文件到这里，或者%{browse}文件',
++  // dropPasteFolders: '拖拽文件到这里，或者%{browse}文件',
++  dropPasteFolders: '拖拽文件夹到这里，或者%{browseFolders}',
+   dropPasteImportBoth: '拖拽文件到这里，粘贴、%{browse}或者导入',
+   dropPasteImportFiles: '拖拽文件到这里，粘贴、%{browse}或者导入',
+   dropPasteImportFolders: '拖拽文件到这里，粘贴、%{browse}或者导入',
+@@ -117,6 +118,18 @@ zh_CN.strings = {
    youCanOnlyUploadFileTypes: '您只能上传这些文件类型：%{types}',
    youCanOnlyUploadX: '您只能上传 %{smart_count} 个文件',
    youHaveToAtLeastSelectX: '您至少要选择 %{smart_count} 个文件',
