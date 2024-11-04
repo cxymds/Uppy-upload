@@ -20,7 +20,7 @@ index 0272668..518a34a 100644
          class: "uppy-Dashboard-AddFiles-title"
        },
 diff --git a/node_modules/@uppy/dashboard/lib/locale.js b/node_modules/@uppy/dashboard/lib/locale.js
-index 6d452ee..c32aaec 100644
+index 6d452ee..7e87abf 100644
 --- a/node_modules/@uppy/dashboard/lib/locale.js
 +++ b/node_modules/@uppy/dashboard/lib/locale.js
 @@ -61,20 +61,29 @@ export default {
@@ -41,9 +41,9 @@ index 6d452ee..c32aaec 100644
 +    // dropPasteFolders: 'Drop files here or %{browseFolders}',
 +    // dropPasteBoth: 'Drop files here, %{browseFiles} or %{browseFolders}',
 +
-+    dropPasteBoth: '拖拽文件或文件夹到这里，或者%{browse}文件夹',
++    dropPasteBoth: '拖拽文件或文件夹到这里，或者%{browse}文件',
 +    dropPasteFiles: '拖拽文件到这里，或者%{browse}文件',
-+    dropPasteFolders: '拖拽文件夹到这里，或者%{browse}文件夹',
++    dropPasteFolders: '拖拽文件夹到这里，或者%{browseFolders}',
      dropPasteImportFiles: 'Drop files here, %{browseFiles} or import from:',
      dropPasteImportFolders: 'Drop files here, %{browseFolders} or import from:',
      dropPasteImportBoth: 'Drop files here, %{browseFiles}, %{browseFolders} or import from:',
