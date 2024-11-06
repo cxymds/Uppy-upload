@@ -1,0 +1,14 @@
+.select-secret {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+.select-secret select {
+  vertical-align: middle;
+  margin-left: 10px;
+  height: 30px;
+  width: 160px;
+  border-radius: 5px;
+  outline: none;
+  border-color: #ccc;
+  text-indent: 10px;
+}

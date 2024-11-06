@@ -75,7 +75,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="state.tableData.total"></el-pagination>
     </el-card>
-    <!-- <UploadCom ref="projectUploadDialogRef" @refresh="getTableData()"></UploadCom> -->
+    <div id="flofer-box"></div>
   </div>
 </template>
 
@@ -92,6 +92,7 @@ import ZhCn from '@uppy/locales/lib/zh_CN';
 // 浏览器缓存 断点续传
 import GoldenRetriever from '@uppy/golden-retriever';
 import Tus from '@uppy/tus';
+import uppyPlugins from '~/utils/uppyPlugin';
 
 import '@uppy/core/dist/style.css';
 import '@uppy/dashboard/dist/style.css';
@@ -193,7 +194,10 @@ const onSearch = () => {
   getTableData();
 };
 
-const makeUpView = () => {};
+// 文件是否加密
+const isSectret = ref('off');
+let files_uppy: any = null;
+let folder_uppy: any = null;
 // 页面加载时
 onMounted(() => {
   if (!route.query.project_id || !route.query.server) {
@@ -206,63 +210,90 @@ onMounted(() => {
   state.tableData.param.project_id = Number(route.query.project_id);
   getTableData();
 
-  let files_uppy = new Uppy({
+  files_uppy = new Uppy({
     //   autoProceed: true,
     debug: true,
     locale: ZhCn,
   })
     .use(Dashboard, {
-      //   target: 'body',
       trigger: '.fileUpload',
       //   inline: true,
       //  'files', 'folders', or 'both'
+      proudlyDisplayPoweredByUppy: false,
       fileManagerSelectionType: 'files',
-      metaFields: [
-        {
-          id: 'isSecret',
-          name: '是否加密',
-          render({ value, onChange, required, form }, h) {
-            return h('input', {
-              type: 'checkbox',
-              style: { 'vertical-align': 'middle' },
-              required,
-              form,
-              onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
-              // defaultChecked: value === 'on',
-            });
-          },
-        },
-      ],
+      // metaFields: [
+      //   {
+      //     id: 'isSecret',
+      //     name: '是否加密',
+      //     render({ value, onChange, required, form }, h) {
+      //       return h('input', {
+      //         type: 'checkbox',
+      //         style: { 'vertical-align': 'middle' },
+      //         required,
+      //         form,
+      //         onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
+      //         // defaultChecked: value === 'on',
+      //       });
+      //     },
+      //   },
+      // ],
+    })
+    .use(uppyPlugins, {
+      id: 'Dropdown',
+      target: '.uppy-Dashboard-innerWrap',
+      options: ['公开', '内部'],
+      defaultValue: '公开',
+      onChange: (value: any) => {
+        if (value === '内部') {
+          isSectret.value = 'on';
+        } else {
+          isSectret.value = 'off';
+        }
+      },
     })
     .use(GoldenRetriever, { serviceWorker: true });
 
-  let folder_uppy = new Uppy({
+  folder_uppy = new Uppy({
     //   autoProceed: true,
     debug: true,
   })
     .use(Dashboard, {
-      //   target: 'body',
+      target: '#flofer-box',
       trigger: '.folderUpload',
       //   inline: true,
       //  'files', 'folders', or 'both'
+      proudlyDisplayPoweredByUppy: false,
       fileManagerSelectionType: 'folders',
-      metaFields: [
-        {
-          id: 'isSecret',
-          name: '是否加密',
-          render({ value, onChange, required, form }, h) {
-            return h('input', {
-              type: 'checkbox',
-              style: { 'vertical-align': 'middle' },
-              required,
-              form,
-              onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
-              // defaultChecked: value === 'on',
-            });
-          },
-        },
-      ],
+      // metaFields: [
+      //   {
+      //     id: 'isSecret',
+      //     name: '是否加密',
+      //     render({ value, onChange, required, form }, h) {
+      //       return h('input', {
+      //         type: 'checkbox',
+      //         style: { 'vertical-align': 'middle' },
+      //         required,
+      //         form,
+      //         onChange: (ev) => onChange(ev.target.checked ? 'on' : 'off'),
+      //         // defaultChecked: value === 'on',
+      //       });
+      //     },
+      //   },
+      // ],
       // locale: ZhCn,
+    })
+    .use(uppyPlugins, {
+      id: 'sDropdown',
+      target: '#flofer-box .uppy-Dashboard-innerWrap',
+      options: ['公开', '内部'],
+      defaultValue: '公开',
+      onChange: (value: any) => {
+        if (value === '内部') {
+          isSectret.value = 'on';
+        } else {
+          isSectret.value = 'off';
+        }
+      },
     })
     .use(GoldenRetriever, { serviceWorker: true });
 
@@ -270,11 +301,21 @@ onMounted(() => {
     console.log('Modal is close');
     getTableData();
   });
+  // 添加文件
+  files_uppy.on('file-added', (file) => {
+    console.log('Added file', file);
+    file.meta.isSecret = isSectret.value;
+  });
 
   folder_uppy.on('dashboard:modal-closed', () => {
     console.log('Modal is close');
     getTableData();
   });
+  folder_uppy.on('file-added', (file) => {
+    console.log('Added file', file);
+    file.meta.isSecret = isSectret.value;
+  });
+
   try {
     // 创建URL对象
     let urlObj = new URL(route.query.server);
@@ -333,5 +374,8 @@ onMounted(() => {
 :deep(.ep-badge__content) {
   transform: translateY(-50%) translateX(calc(100% + 10px));
   font-size: 10px;
+}
+::deep(.uppy-select) {
+  height: 30px;
 }
 </style>
