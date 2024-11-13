@@ -7,7 +7,7 @@
       <div class="system-user-search">
         <el-form :inline="true" class="flex" :model="searchForm" label-position="right">
           <el-form-item label="项目名称">
-            <el-input size="default" placeholder="请输入项目名称" clearable v-model="searchForm.project_name"></el-input>
+            <el-input size="default" @keydown.enter.prevent="onSearch" placeholder="请输入项目名称" clearable v-model="searchForm.project_name"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -19,7 +19,7 @@
         <el-button type="primary" :icon="Plus" @click="onOpenProjectCreate()">新增项目</el-button>
       </div>
       <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
-        <el-table-column prop="id" label="id" width="60" />
+        <el-table-column type="index" label="序号" width="60" />
         <el-table-column prop="project_name" label="项目名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="file_count" label="文件数量" show-overflow-tooltip></el-table-column>
         <!-- <el-table-column prop="current_status_desc" label="上传状态" show-overflow-tooltip></el-table-column> -->
@@ -44,7 +44,7 @@
         class="mt15"
         :pager-count="5"
         :page-sizes="[10, 20, 30]"
-        v-model:current-page="state.tableData.param.pageNum"
+        v-model:current-page="state.tableData.param.page"
         background
         v-model:page-size="state.tableData.param.page_size"
         layout="total, sizes, prev, pager, next, jumper"
@@ -97,6 +97,12 @@ const getTableData = async () => {
   }, 500);
 };
 
+const enterSearch = (e: Event) => {
+  console.log(1111);
+  e.preventDefault();
+  e.stopPropagation();
+  onSearch();
+};
 // 分页改变
 const onHandleSizeChange = (val: number) => {
   state.tableData.param.page_size = val;
@@ -104,7 +110,7 @@ const onHandleSizeChange = (val: number) => {
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  state.tableData.param.pageNum = val;
+  state.tableData.param.page = val;
   getTableData();
 };
 

@@ -47,11 +47,16 @@
         </el-dropdown>
       </div>
       <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
-        <el-table-column prop="file_id" label="序号" width="90px" show-overflow-tooltip></el-table-column>
+        <el-table-column type="index" label="序号" width="90px" show-overflow-tooltip></el-table-column>
         <el-table-column prop="filename" label="文件名称" show-overflow-tooltip>
           <template #default="scope">
             {{ scope.row.filename }}
-            <img width="20" v-if="scope.row.is_secret === 'on'" src="../../assets/secret.jpg" alt="" />
+            <!-- <img width="20" v-if="scope.row.is_secret === 'on'" src="../../assets/secret.jpg" alt="" /> -->
+          </template>
+        </el-table-column>
+        <el-table-column prop="is_secret" label="密级" show-overflow-tooltip>
+          <template #default="scope">
+            {{ scope.row.is_secret === 'on' ? '内部' : '公开' }}
           </template>
         </el-table-column>
         <el-table-column prop="upload_status_desc" label="上传状态" show-overflow-tooltip></el-table-column>
